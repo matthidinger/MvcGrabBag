@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace MvcGrabBag.Web.Helpers
 {
-    public class RadioButtonListViewModel<T>
+    public class RadioButtonListViewModel
     {
-        public static RadioButtonListViewModel<bool> FromBool(string id, bool selectedValue, string tooltip)
+        public static RadioButtonListViewModel<bool> FromBool(bool selectedValue, string tooltip)
         {
             var vm = new RadioButtonListViewModel<bool>
-                         {
-                             SelectedValue = selectedValue,
-                             ListItems =
-                                 new List<RadioButtonListItem<bool>>
+            {
+                SelectedValue = selectedValue,
+                ListItems =
+                    new List<RadioButtonListItem<bool>>
                                      {
                                          new RadioButtonListItem<bool>
                                              {
@@ -30,40 +30,35 @@ namespace MvcGrabBag.Web.Helpers
                                                  Tooltip = tooltip
                                              }
                                      }
-                         };
+            };
 
 
             return vm;
         }
 
-        public static RadioButtonListViewModel<T> FromEnum(string id, T selectedValue)
+        public static RadioButtonListViewModel<T> FromEnum<T>(T selectedValue)
         {
             var vm = new RadioButtonListViewModel<T>
-                         {
-                             SelectedValue = selectedValue,
-                             ListItems = new List<RadioButtonListItem<T>>()
-                         };
+            {
+                SelectedValue = selectedValue,
+                ListItems = new List<RadioButtonListItem<T>>()
+            };
 
-            foreach (var name in Enum.GetNames(typeof (T)))
+            foreach (var name in Enum.GetNames(typeof(T)))
             {
                 var listItem = new RadioButtonListItem<T>
-                                   {
-                                       Text = name.Wordify(),
-                                       Value = (T) Enum.Parse(typeof (T), name, true),
-                                   };
+                {
+                    Text = name.Wordify(),
+                    Value = (T)Enum.Parse(typeof(T), name, true),
+                };
 
                 if (listItem.Value.Equals(selectedValue))
                     listItem.Selected = true;
 
 
-                var type = typeof (T);
-                var memInfo = type.GetMember(name);
-                var attribute =
-                    memInfo[0].GetCustomAttributes(typeof (DescriptionAttribute), false).OfType<DescriptionAttribute>().
-                        FirstOrDefault();
-
-                if (attribute != null)
-                    listItem.Tooltip = attribute.Description;
+                var displayAttribute = typeof(T).GetMember(name)[0].GetCustomAttributes(typeof(DisplayAttribute), false).OfType<DisplayAttribute>().FirstOrDefault();
+                if (displayAttribute != null)
+                    listItem.Tooltip = displayAttribute.Description;
 
 
                 vm.ListItems.Add(listItem);
@@ -71,7 +66,10 @@ namespace MvcGrabBag.Web.Helpers
 
             return vm;
         }
+    }
 
+    public class RadioButtonListViewModel<T> : RadioButtonListViewModel
+    {
         private T _selectedValue;
 
         public T SelectedValue

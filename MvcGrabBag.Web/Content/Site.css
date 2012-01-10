@@ -411,7 +411,7 @@ fieldset {
 .field-validation-error {
     color: #e80c4d;
     font-weight: bold;
-    display: inline-block;
+    display: block;
 }
 
 .field-validation-valid {
@@ -664,8 +664,7 @@ ul#social li {
 
 
 .field-label {
-    float: left;
-    width: 125px;
+
 }
 
 .required .field-label {
@@ -673,7 +672,7 @@ ul#social li {
 }
 
 .field-input {
-
+    
 }
 
 .field-input input, .field-input textarea {
@@ -691,3 +690,17 @@ textarea {
 
 
 /* End HtmlFormHelper styles */
+
+
+/* Selector style */
+
+.selector-item input {
+    width: auto;
+}
+
+.input-validation-error {
+    border: solid 1px #e80c4d;
+}
+
+
+/* End Selector styles */

@@ -1,11 +1,11 @@
 ﻿@model MvcGrabBag.Web.Models.ProductInput
 
 @{
-    ViewBag.Title = "Edit Product";
+    ViewBag.Title = "New Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit Product</h2>
+<h2>New Product</h2>
 
 
 <form action="" method="post">
@@ -22,9 +22,14 @@
         <div class="field-group">
             @Html.FullFieldEditor(m => m.SalePrice)
             @Html.FullFieldEditor(m => m.FeaturedDescription)
+
+            @Html.FullFieldEditor(m => m.DisplayMode)
+            @Html.FullFieldEditor(m => m.DisplayModeRadio)
+            @Html.FullFieldEditor(m => m.DisplayModesListBox)
+            @Html.FullFieldEditor(m => m.DisplayModes)
+            @Html.FullFieldEditor(m => m.DisplayModeReadOnly)
         </div>
     </div>
-    
     
     <div class="clear-fix"></div>
    

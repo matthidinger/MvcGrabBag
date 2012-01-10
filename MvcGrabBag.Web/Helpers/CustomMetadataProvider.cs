@@ -31,39 +31,12 @@ namespace MvcGrabBag.Web.Helpers
                 metadata.DisplayName = propertyName.Wordify();
             }
 
-            //var currencyAttribute = attributes.OfType<CurrencyAttribute>().FirstOrDefault();
-            //if (currencyAttribute != null)
-            //{
-            //    metadata.TemplateHint = "Currency";
-            //    metadata.AdditionalValues.Add("DisplayCents", currencyAttribute.DisplayCents);
-            //    metadata.AdditionalValues.Add("Increment", currencyAttribute.Increment);
-
-            //    metadata.EditFormatString = "{0:C}";
-            //    //if (currencyAttribute.DisplayCents)
-            //    //    metadata.EditFormatString = "{0:0.C00}";
-            //}
-
-            //var phoneAttribute = attributes.OfType<PhoneAttribute>().FirstOrDefault();
-            //if (phoneAttribute != null)
-            //{
-            //    metadata.TemplateHint = "Phone";
-            //}
-
-            //var percentAttribute = attributes.OfType<PercentAttribute>().FirstOrDefault();
-            //if (percentAttribute != null)
-            //{
-            //    metadata.TemplateHint = "Percent";
-            //    metadata.AdditionalValues.Add("Increment", percentAttribute.Increment);
-            //}
-
-
-            var multiLineAttribute = attributes.OfType<MultiLineAttribute>().FirstOrDefault();
-            if (multiLineAttribute != null)
+            foreach (var attribute in attributes.OfType<MetadataAttribute>())
             {
-                metadata.TemplateHint = "MultiLine";
+                attribute.ApplyMetdata(metadata);
             }
 
-
+  
             //// Handle runtime metadata
             //var container = GetContainer(modelAccessor);
             //var metadataContainer = container as IMetadataContainer;
@@ -71,26 +44,6 @@ namespace MvcGrabBag.Web.Helpers
             //{
             //    ((IMetadataAdapter)metadataContainer.Metadata).ApplyMetadata(metadata);
             //}
-
-
-
-            //// Selectors
-            //if (typeof(SelectorInput).IsAssignableFrom(modelType))
-            //{
-            //    var selector = (SelectorInput)modelAccessor();
-            //    if (selector == null)
-            //    {
-            //        throw new InvalidOperationException(
-            //            "The selector being bound is null, this should not happen. Did you forget to new it up in the view model?");
-            //    }
-
-            //    if (metadata.IsReadOnly)
-            //        selector.IsRequired = false;
-
-            //    metadata.IsRequired = selector.IsRequired;
-
-            //}
-
 
 
             // !! Make sure this is always at the bottom
@@ -117,10 +70,5 @@ namespace MvcGrabBag.Web.Helpers
 
             return null;
         }
-    }
-
-    public class PercentAttribute : Attribute
-    {
-        public decimal Increment { get; set; }
     }
 }

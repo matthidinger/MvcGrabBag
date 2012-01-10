@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace MvcGrabBag.Web.Models
 {
     public class ProductInput
     {
+        public ProductInput()
+        {
+            DisplayModeReadOnly = new List<ProductDisplayMode> { ProductDisplayMode.HomePage, ProductDisplayMode.BrowseOnly};
+        }
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
@@ -26,5 +32,48 @@ namespace MvcGrabBag.Web.Models
 
         [Display(Description = "Price of the product during a sale")]
         public decimal? SalePrice { get; set; }
+
+
+        [Required]
+        [ProductDisplayModeSelector(MaxRadioButtons = 0)]
+        public ProductDisplayMode? DisplayMode { get; set; }
+
+        [Required]
+        [ProductDisplayModeSelector]
+        public ProductDisplayMode? DisplayModeRadio { get; set; }
+
+
+        [Required]
+        [ProductDisplayModeSelector(MaxRadioButtons = 0)]
+        public List<ProductDisplayMode> DisplayModesListBox { get; set; }
+
+
+        [Required]
+        [ProductDisplayModeSelector]
+        public List<ProductDisplayMode> DisplayModes { get; set; }
+
+        [ProductDisplayModeSelector]
+        [ReadOnly(true)]
+        public List<ProductDisplayMode> DisplayModeReadOnly { get; set; }
     }
+
+    public class ProductDisplayModeSelectorAttribute : SelectorAttribute
+    {
+        public override IEnumerable<SelectListItem> GetOptions()
+        {
+            return Selector.GetItemsFromEnum<ProductDisplayMode>();
+        }
+    }
+
+
+    public enum ProductDisplayMode
+    {
+        [Display(Description = "Only show on home page")]
+        HomePage,
+        [Display(Description = "Only show on search results")]
+        SearchResults,
+        [Display(Description = "Only allow browsing")]
+        BrowseOnly
+    }
+
 }
