@@ -1,0 +1,32 @@
+﻿@model MvcGrabBag.Web.Models.ProductInput
+
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Product</h2>
+
+
+<form action="" method="post">
+    
+    <div class="two-column">
+    
+        <div class="field-group">
+            @Html.FullFieldEditor(m => m.Id)
+            @Html.FullFieldEditor(m => m.Name)
+            @Html.FullFieldEditor(m => m.Price)
+            @Html.FullFieldEditor(m => m.Description)
+        </div>
+        
+        <div class="field-group">
+            @Html.FullFieldEditor(m => m.SalePrice)
+            @Html.FullFieldEditor(m => m.FeaturedDescription)
+        </div>
+    </div>
+    
+    
+    <div class="clear-fix"></div>
+   
+    <input type="submit" value="Save"/>
+</form>
