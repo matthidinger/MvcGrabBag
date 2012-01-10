@@ -31,8 +31,6 @@ namespace MvcGrabBag.Web
             RegisterRoutes(RouteTable.Routes);
 
             var customMetadataProvider = new CustomMetadataProvider();
-
-
             ModelMetadataProviders.Current = customMetadataProvider;
         }
     }

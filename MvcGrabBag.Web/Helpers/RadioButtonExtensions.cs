@@ -10,14 +10,14 @@ namespace MvcGrabBag.Web.Helpers
 {
     public static class RadioButtonExtensions
     {
-        public static string RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
+        public static MvcHtmlString RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
                                                                                Expression<Func<TModel, RadioButtonListViewModel<TRadioButtonListValue>>> expression)
             where TModel : class
         {
             return htmlHelper.RadioButtonListFor(expression, null);
         }
 
-        public static string RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
+        public static MvcHtmlString RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
                                                                                Expression<Func<TModel, RadioButtonListViewModel<TRadioButtonListValue>>> expression,
                                                                                object htmlAttributes)
             where TModel : class
@@ -25,20 +25,20 @@ namespace MvcGrabBag.Web.Helpers
             return htmlHelper.RadioButtonListFor(expression, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static string RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
+        public static MvcHtmlString RadioButtonListFor<TModel, TRadioButtonListValue>(this HtmlHelper<TModel> htmlHelper,
                                                                                Expression<Func<TModel, RadioButtonListViewModel<TRadioButtonListValue>>> expression,
                                                                                IDictionary<string, object> htmlAttributes) where TModel : class
         {
             htmlAttributes = htmlAttributes ?? new Dictionary<string, object>();
 
-            var inputName = htmlHelper.ViewData.TemplateInfo.GetFullHtmlFieldName(GetInputName(expression));
+            var inputName = htmlHelper.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
             var uniqueId = inputName + "_" + Guid.NewGuid();
             var radioButtonList = GetValue(htmlHelper, expression);
             if (radioButtonList == null)
-                return String.Empty;
+                return MvcHtmlString.Empty;
 
             if (radioButtonList.ListItems == null)
-                return String.Empty;
+                return MvcHtmlString.Empty;
 
             var divTag = new TagBuilder("div");
             divTag.MergeAttribute("id", uniqueId);
@@ -62,36 +62,12 @@ namespace MvcGrabBag.Web.Helpers
             var validationMessage = htmlHelper.ValidationMessage(inputName, "*");
             if (!MvcHtmlString.IsNullOrEmpty(validationMessage))
             {
-                return divTag + validationMessage.ToHtmlString();
+                return new MvcHtmlString(divTag + validationMessage.ToHtmlString());
             }
-            return divTag.ToString();
+            return new MvcHtmlString(divTag.ToString());
         }
 
-        public static string GetInputName<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression)
-        {
-            if (expression.Body.NodeType == ExpressionType.Call)
-            {
-                var methodCallExpression = (MethodCallExpression)expression.Body;
-                string name = GetInputName(methodCallExpression);
-                return name.Substring(expression.Parameters[0].Name.Length + 1);
-
-            }
-            return expression.Body.ToString().Substring(expression.Parameters[0].Name.Length + 1);
-        }
-
-        private static string GetInputName(MethodCallExpression expression)
-        {
-            // p => p.Foo.Bar().Baz.ToString() => p.Foo OR throw...
-
-            var methodCallExpression = expression.Object as MethodCallExpression;
-            if (methodCallExpression != null)
-            {
-                return GetInputName(methodCallExpression);
-            }
-            return expression.Object.ToString();
-        }
-
-        public static string RadioButton(this HtmlHelper htmlHelper, string name, string uniqueId,
+        public static MvcHtmlString RadioButton(this HtmlHelper htmlHelper, string name, string uniqueId,
                                          SelectListItem listItem,
                                          IDictionary<string, object> htmlAttributes)
         {
@@ -113,19 +89,16 @@ namespace MvcGrabBag.Web.Helpers
             builder.MergeAttributes(htmlAttributes);
             sb.Append(builder.ToString(TagRenderMode.SelfClosing));
             sb.Append(RadioButtonLabel(inputIdSb.ToString(), listItem.Text, htmlAttributes));
-            //sb.Append("<br>");
-
-            return sb.ToString();
+            return new MvcHtmlString(sb.ToString());
         }
 
-        public static string RadioButtonLabel(string inputId, string displayText, IDictionary<string, object> htmlAttributes)
+        public static MvcHtmlString RadioButtonLabel(string inputId, string displayText, IDictionary<string, object> htmlAttributes)
         {
             var labelBuilder = new TagBuilder("label");
             labelBuilder.MergeAttribute("for", inputId);
             labelBuilder.MergeAttributes(htmlAttributes);
             labelBuilder.InnerHtml = displayText;
-
-            return labelBuilder.ToString(TagRenderMode.Normal);
+            return new MvcHtmlString(labelBuilder.ToString(TagRenderMode.Normal));
         }
 
 
@@ -137,7 +110,7 @@ namespace MvcGrabBag.Web.Helpers
             {
                 return default(TProperty);
             }
-            Func<TModel, TProperty> func = expression.Compile();
+            var func = expression.Compile();
             return func(model);
         }
     }

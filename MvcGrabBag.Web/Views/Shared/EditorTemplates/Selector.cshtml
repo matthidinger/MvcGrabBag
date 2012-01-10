@@ -1,0 +1,95 @@
+﻿@using System.Collections
+@model object
+@{
+    var supportsMany = typeof (IEnumerable).IsAssignableFrom(ViewData.ModelMetadata.ModelType);
+    var selectorModel = (MvcGrabBag.Web.Models.Selector)ViewData.ModelMetadata.AdditionalValues["SelectorModelMetadata"];
+    var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
+    var validationClass = ViewData.ModelState.IsValidField(fieldName) ? "" : "input-validation-error";
+
+    if(Model != null)
+    {
+        foreach (var item in selectorModel.Items)
+        {
+            if (supportsMany)
+            {
+                var modelStateValue = Html.GetModelStateValue<string[]>(fieldName) ?? ((IEnumerable)Model).OfType<object>().Select(m => m.ToString());
+                item.Selected = modelStateValue.Contains(item.Value);
+            }
+            else
+            {
+                var modelStateValue = Html.GetModelStateValue<string>(fieldName);
+                item.Selected = modelStateValue.Equals(item.Value, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+    }
+}
+
+@if (ViewData.ModelMetadata.IsReadOnly)
+{
+    var readonlyText = selectorModel.Items.Where(i => i.Selected).ToDelimitedString(i => i.Text);
+    if (string.IsNullOrWhiteSpace(readonlyText))
+    {
+        readonlyText = selectorModel.OptionLabel ?? "Not Set";
+    }
+    
+    @readonlyText
+
+    foreach (var item in selectorModel.Items.Where(i => i.Selected))
+    {
+        @Html.Hidden(fieldName, item.Value)
+    }
+}
+else
+{
+    if (selectorModel.AllowMultipleSelection)
+    {
+        if (selectorModel.Items.Count() < selectorModel.RadioButtonThreshold)
+        {
+            <div class="@validationClass">
+                @foreach (var item in selectorModel.Items)
+                {
+                    var id = ViewData.TemplateInfo.GetFullHtmlFieldId(item.Value);
+                    string checkedAttribute = item.Selected ? "checked=\"checked\"" : "";
+
+                    <div class="selector-item">
+                        <input type="checkbox" name="@fieldName" value="@item.Value" id="@id" @Html.Raw(checkedAttribute) />
+                        <label for="@id">@item.Text</label>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            @Html.ListBox("", selectorModel.Items)
+        }
+    }
+    else if (selectorModel.Items.Count() < selectorModel.RadioButtonThreshold)
+    {
+        <div class="@validationClass">
+            @if (selectorModel.OptionLabel != null)
+            {
+                string id = ViewData.TemplateInfo.GetFullHtmlFieldId("NA");
+                string checkedAttribute = Model == null ? "checked=\"checked\"" : "";
+            
+                <div class="selector-item">
+                    <input type="radio" name="@fieldName" value="" id="@id" @Html.Raw(checkedAttribute) />
+                    <label for="@id">@selectorModel.OptionLabel</label>
+                </div>
+            }
+
+            @foreach (var item in selectorModel.Items)
+            {
+                var id = ViewData.TemplateInfo.GetFullHtmlFieldId(item.Value);
+                string checkedAttribute = item.Selected ? "checked=\"checked\"" : "";
+                <div class="selector-item">
+                    <input type="radio" name="@fieldName" value="@item.Value" id="@id" @Html.Raw(checkedAttribute) />
+                    <label for="@id">@item.Text</label>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        @Html.DropDownList("", selectorModel.Items, selectorModel.OptionLabel)
+    }
+}
