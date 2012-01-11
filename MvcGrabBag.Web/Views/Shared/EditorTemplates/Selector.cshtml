@@ -1,8 +1,10 @@
 ﻿@using System.Collections
+@using MvcGrabBag.Web.Selectors
+
 @model object
 @{
     var supportsMany = typeof (IEnumerable).IsAssignableFrom(ViewData.ModelMetadata.ModelType);
-    var selectorModel = (MvcGrabBag.Web.Models.Selector)ViewData.ModelMetadata.AdditionalValues["SelectorModelMetadata"];
+    var selectorModel = (Selector)ViewData.ModelMetadata.AdditionalValues["SelectorModelMetadata"];
     var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
     var validationClass = ViewData.ModelState.IsValidField(fieldName) ? "" : "input-validation-error";
 
@@ -43,7 +45,7 @@ else
 {
     if (selectorModel.AllowMultipleSelection)
     {
-        if (selectorModel.Items.Count() < selectorModel.RadioButtonThreshold)
+        if (selectorModel.Items.Count() < selectorModel.BulkSelectionThreshold)
         {
             <div class="@validationClass">
                 @foreach (var item in selectorModel.Items)
@@ -63,7 +65,7 @@ else
             @Html.ListBox("", selectorModel.Items)
         }
     }
-    else if (selectorModel.Items.Count() < selectorModel.RadioButtonThreshold)
+    else if (selectorModel.Items.Count() < selectorModel.BulkSelectionThreshold)
     {
         <div class="@validationClass">
             @if (selectorModel.OptionLabel != null)

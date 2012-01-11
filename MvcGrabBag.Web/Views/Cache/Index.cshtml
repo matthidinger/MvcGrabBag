@@ -1,0 +1,12 @@
+﻿@model DateTime
+
+@{
+    ViewBag.Title = "Caching";
+}
+
+<h2>Caching</h2>
+
+<p>The first time the page is loaded it will cache the current time for 1 minute. Refresh the page multiple times to see it in action.</p>
+
+<p>The time in cache is: @Model</p>
+<p>The current time is @DateTime.Now</p>

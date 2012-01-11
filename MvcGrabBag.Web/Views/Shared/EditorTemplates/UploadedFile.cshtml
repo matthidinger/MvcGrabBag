@@ -1,0 +1,23 @@
+﻿@model MvcGrabBag.Web.FileUpload.UploadedFile
+
+@{
+    var cssClass = ViewData.ModelState.IsValidField(ViewData.TemplateInfo.HtmlFieldPrefix) ? "" : "input-validation-error";    
+}
+
+
+<div class="@cssClass">
+    @if(Model != null && Model.FileName != null)
+    {
+        <span>This file has already been uploaded. Click "Browse..." to override it with a new file</span>
+        <br />
+        <p>Current file
+            <br/>
+            <a href= "@Url.Action("OpenFile", "UploadedFile", new { fileName = Model.FileName })" target="_blank">@Model.FileName</a>
+        </p>
+    }
+
+    <input type="file" name="@ViewData.TemplateInfo.GetFullHtmlFieldName("NewFile")"/>
+
+    @Html.HiddenFor(m => m.NewFile)
+
+</div>

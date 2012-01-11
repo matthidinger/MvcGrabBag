@@ -1,7 +1,6 @@
-using System;
 using System.Web.Mvc;
 
-namespace MvcGrabBag.Web.Helpers
+namespace MvcGrabBag.Web.Selectors
 {
     public static class SelectorHelper
     {

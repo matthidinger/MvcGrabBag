@@ -8,7 +8,7 @@
 <h2>New Product</h2>
 
 
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     
     <div class="two-column">
     
@@ -17,16 +17,18 @@
             @Html.FullFieldEditor(m => m.Name)
             @Html.FullFieldEditor(m => m.Price)
             @Html.FullFieldEditor(m => m.Description)
+            @Html.FullFieldEditor(m => m.CategoryId)
+            @Html.FullFieldEditor(m => m.Thumbnail)
         </div>
         
         <div class="field-group">
             @Html.FullFieldEditor(m => m.SalePrice)
             @Html.FullFieldEditor(m => m.FeaturedDescription)
 
-            @Html.FullFieldEditor(m => m.DisplayMode)
+            @Html.FullFieldEditor(m => m.DisplayModeDropDown)
             @Html.FullFieldEditor(m => m.DisplayModeRadio)
             @Html.FullFieldEditor(m => m.DisplayModesListBox)
-            @Html.FullFieldEditor(m => m.DisplayModes)
+            @Html.FullFieldEditor(m => m.DisplayModesCheckBox)
             @Html.FullFieldEditor(m => m.DisplayModeReadOnly)
         </div>
     </div>
