@@ -2,6 +2,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using MvcGrabBag.Web.FileUpload;
+using MvcGrabBag.Web.Metadata;
+using MvcGrabBag.Web.Selectors;
 
 namespace MvcGrabBag.Web.Models
 {
@@ -11,6 +14,7 @@ namespace MvcGrabBag.Web.Models
         {
             DisplayModeReadOnly = new List<ProductDisplayMode> { ProductDisplayMode.HomePage, ProductDisplayMode.BrowseOnly};
         }
+
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
@@ -35,8 +39,18 @@ namespace MvcGrabBag.Web.Models
 
 
         [Required]
-        [ProductDisplayModeSelector(MaxRadioButtons = 0)]
-        public ProductDisplayMode? DisplayMode { get; set; }
+        public UploadedFile Thumbnail { get; set; }
+
+
+        [Required]
+        [CategorySelector]
+        [Display(Name = "Category")]
+        public int? CategoryId { get; set; }
+
+
+        [Required]
+        [ProductDisplayModeSelector(BulkSelectionThreshold = 0)]
+        public ProductDisplayMode? DisplayModeDropDown { get; set; }
 
         [Required]
         [ProductDisplayModeSelector]
@@ -44,36 +58,16 @@ namespace MvcGrabBag.Web.Models
 
 
         [Required]
-        [ProductDisplayModeSelector(MaxRadioButtons = 0)]
+        [ProductDisplayModeSelector(BulkSelectionThreshold = 0)]
         public List<ProductDisplayMode> DisplayModesListBox { get; set; }
 
 
         [Required]
         [ProductDisplayModeSelector]
-        public List<ProductDisplayMode> DisplayModes { get; set; }
+        public List<ProductDisplayMode> DisplayModesCheckBox { get; set; }
 
         [ProductDisplayModeSelector]
         [ReadOnly(true)]
         public List<ProductDisplayMode> DisplayModeReadOnly { get; set; }
     }
-
-    public class ProductDisplayModeSelectorAttribute : SelectorAttribute
-    {
-        public override IEnumerable<SelectListItem> GetOptions()
-        {
-            return Selector.GetItemsFromEnum<ProductDisplayMode>();
-        }
-    }
-
-
-    public enum ProductDisplayMode
-    {
-        [Display(Description = "Only show on home page")]
-        HomePage,
-        [Display(Description = "Only show on search results")]
-        SearchResults,
-        [Display(Description = "Only allow browsing")]
-        BrowseOnly
-    }
-
 }

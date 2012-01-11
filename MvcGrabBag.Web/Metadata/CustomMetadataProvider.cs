@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using MvcGrabBag.Web.Models;
+using MvcGrabBag.Web.Helpers;
+using MvcGrabBag.Web.Selectors;
 
-namespace MvcGrabBag.Web.Helpers
+namespace MvcGrabBag.Web.Metadata
 {
     public class CustomMetadataProvider : DataAnnotationsModelMetadataProvider
     {
@@ -35,6 +36,12 @@ namespace MvcGrabBag.Web.Helpers
             {
                 attribute.ApplyMetdata(metadata);
             }
+
+            foreach (var attribute in attributes.OfType<SelectorAttribute>())
+            {
+                attribute.ApplyMetdata(metadata);
+            }
+
 
   
             //// Handle runtime metadata

@@ -1,7 +1,6 @@
 using System.Web.Mvc;
-using MvcGrabBag.Web.Models;
 
-namespace MvcGrabBag.Web.Helpers
+namespace MvcGrabBag.Web.Metadata
 {
     public class PercentAttribute : MetadataAttribute
     {

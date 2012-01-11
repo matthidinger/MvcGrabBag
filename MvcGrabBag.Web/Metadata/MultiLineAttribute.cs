@@ -1,6 +1,6 @@
 using System.Web.Mvc;
 
-namespace MvcGrabBag.Web.Models
+namespace MvcGrabBag.Web.Metadata
 {
     public class MultiLineAttribute : MetadataAttribute
     {
