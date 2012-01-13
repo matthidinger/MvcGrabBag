@@ -17,11 +17,40 @@ namespace MvcGrabBag.Web.Controllers
             _cache = cache;
         }
 
-        public ActionResult Index()
+
+        public ActionResult Bad()
         {
-            var now = _cache.Get(CacheScope.User, "Now", 1, () => DateTime.Now);
-            return View(now);
+            var firstVisit = HttpContext.Cache.Get("FirstVisit") as DateTime?;
+            if (firstVisit == null)
+            {
+                firstVisit = DateTime.Now;
+                HttpContext.Cache.Insert("FirstVisit", firstVisit, null, DateTime.Now.AddMinutes(1), TimeSpan.Zero);
+            }
+
+            return View("Index", firstVisit.Value);
         }
 
+        public ActionResult Index()
+        {
+            var firstVisit = _cache.Get(CacheScope.User, "FirstVisit", TimeSpan.FromMinutes(1), () => DateTime.Now);
+            return View(firstVisit);
+        }
+
+        public ActionResult FullyAbstracted()
+        {
+            var firstVisit = AppCache.UsersFirstVisit;
+            return View("Index", firstVisit);
+        }
+
+    }
+
+    /// <summary>
+    /// This class demonstrates fully abstracting the details of your caching strategy and could serve as the single entry point for cached data
+    /// </summary>
+    public static class AppCache
+    {
+        public static ICache InternalCache = new HttpCache();
+
+        public static DateTime UsersFirstVisit = InternalCache.Get(CacheScope.User, "FirstVisit", TimeSpan.FromMinutes(1), () => DateTime.Now);
     }
 }

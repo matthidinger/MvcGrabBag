@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using MvcGrabBag.Web.FileUpload;
 using MvcGrabBag.Web.Metadata;
 
 namespace MvcGrabBag.Web
@@ -35,6 +36,8 @@ namespace MvcGrabBag.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            ModelValidatorProviders.Providers.Add(new UploadedFileModelValidatorProvider());
 
             var customMetadataProvider = new CustomMetadataProvider();
             ModelMetadataProviders.Current = customMetadataProvider;
