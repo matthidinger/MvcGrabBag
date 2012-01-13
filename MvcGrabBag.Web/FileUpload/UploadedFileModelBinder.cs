@@ -20,8 +20,7 @@ namespace MvcGrabBag.Web.FileUpload
 
             if (bindingContext.ModelMetadata.IsRequired)
             {
-                if ((postedFile == null || postedFile.ContentLength == 0) &&
-                    string.IsNullOrEmpty(model.UploadedPhysicalPath))
+                if ((postedFile == null || postedFile.ContentLength == 0) && model.ContentLength == 0)
                 {
                     bindingContext.ModelState.AddModelError(bindingContext.ModelName, "Please select a file to upload");
                 }
@@ -29,7 +28,7 @@ namespace MvcGrabBag.Web.FileUpload
 
             if (postedFile != null)
             {
-                model.NewFile = new HttpFileUpload(postedFile);
+                model.NewFile = new UploadedFile(postedFile);
             }
 
             return model;

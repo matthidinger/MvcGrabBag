@@ -1,0 +1,15 @@
+﻿@model MvcGrabBag.Web.Models.ProductThumbnail
+
+@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>Upload</h2>
+
+@using(Ajax.BeginForm(new AjaxOptions()))
+{
+
+    @Html.EditorFor(m => m.Thumbnail)
+    
+    <input type="submit" value="Save"/>
+}

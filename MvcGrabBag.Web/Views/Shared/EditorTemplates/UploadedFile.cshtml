@@ -8,12 +8,13 @@
 <div class="@cssClass">
     @if(Model != null && Model.FileName != null)
     {
-        <span>This file has already been uploaded. Click "Browse..." to override it with a new file</span>
-        <br />
-        <p>Current file
+        <div>
+            <span>This file has already been uploaded. Click "Browse..." to overwrite it with a new file</span>
+            <br />
+            <span>Current file</span>
             <br/>
             <a href= "@Url.Action("OpenFile", "UploadedFile", new { fileName = Model.FileName })" target="_blank">@Model.FileName</a>
-        </p>
+        </div>
     }
 
     <input type="file" name="@ViewData.TemplateInfo.GetFullHtmlFieldName("NewFile")"/>

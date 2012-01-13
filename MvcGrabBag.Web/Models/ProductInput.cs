@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using MvcGrabBag.Web.FileUpload;
-using MvcGrabBag.Web.Metadata;
 using MvcGrabBag.Web.Selectors;
 
 namespace MvcGrabBag.Web.Models
@@ -23,12 +22,12 @@ namespace MvcGrabBag.Web.Models
 
         [Required]
         [Display(Description = "A brief description of the product")]
-        [MultiLine]
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
 
         [Display(Description = "An optional alternate description of the product to display when featured on the home page")]
-        [MultiLine]
+        [DataType(DataType.MultilineText)]
         public string FeaturedDescription { get; set; }
 
         [Required]
