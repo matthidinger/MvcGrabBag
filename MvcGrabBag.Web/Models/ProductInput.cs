@@ -9,11 +9,6 @@ namespace MvcGrabBag.Web.Models
 {
     public class ProductInput
     {
-        public ProductInput()
-        {
-            DisplayModeReadOnly = new List<ProductDisplayMode> { ProductDisplayMode.HomePage, ProductDisplayMode.BrowseOnly};
-        }
-
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
@@ -47,26 +42,5 @@ namespace MvcGrabBag.Web.Models
         public int? CategoryId { get; set; }
 
 
-        [Required]
-        [ProductDisplayModeSelector(BulkSelectionThreshold = 0)]
-        public ProductDisplayMode? DisplayModeDropDown { get; set; }
-
-        [Required]
-        [ProductDisplayModeSelector]
-        public ProductDisplayMode? DisplayModeRadio { get; set; }
-
-
-        [Required]
-        [ProductDisplayModeSelector(BulkSelectionThreshold = 0)]
-        public List<ProductDisplayMode> DisplayModesListBox { get; set; }
-
-
-        [Required]
-        [ProductDisplayModeSelector]
-        public List<ProductDisplayMode> DisplayModesCheckBox { get; set; }
-
-        [ProductDisplayModeSelector]
-        [ReadOnly(true)]
-        public List<ProductDisplayMode> DisplayModeReadOnly { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using MvcGrabBag.Web.Helpers;
-using MvcGrabBag.Web.Selectors;
 
 namespace MvcGrabBag.Web.Metadata
 {
@@ -31,17 +30,6 @@ namespace MvcGrabBag.Web.Metadata
             {
                 metadata.DisplayName = propertyName.Wordify();
             }
-
-            foreach (var attribute in attributes.OfType<MetadataAttribute>())
-            {
-                attribute.ApplyMetdata(metadata);
-            }
-
-            foreach (var attribute in attributes.OfType<SelectorAttribute>())
-            {
-                attribute.ApplyMetdata(metadata);
-            }
-
 
   
             //// Handle runtime metadata

@@ -1,0 +1,25 @@
+﻿@model List<MvcGrabBag.Web.Models.Category>
+
+Categories: <br />
+
+@(Html.TreeView(Model)
+
+    .EmptyContent("No locations have been defined yet!")    
+
+    .Children(m => m.SubCategories)
+
+    .HtmlAttributes(new { id = "tree"})
+
+    .ChildrenHtmlAttributes(new { @class = "subItem"})
+
+    .ItemText(m => m.Name)    
+
+    .ItemTemplate(       
+
+        @<text>   
+
+               <a href="/@item.seName">@item.Name</a>            
+
+        </text>)
+
+) 

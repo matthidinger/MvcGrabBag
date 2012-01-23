@@ -15,6 +15,23 @@
         <script src="@Url.Content("~/Scripts/requiredfileupload.js")" type="text/javascript"></script>
 
         <script src="@Url.Content("~/Scripts/modernizr-2.0.6-development-only.js")" type="text/javascript"></script>
+        
+        <script type="text/javascript">
+            (function ($) {
+                
+
+                $.validator.addMethod("selector", function (value, element, params) {
+
+                    if (!this.optional(element)) {
+                        var otherProp = $('#' + params);
+                        return (otherProp.val() != value);
+                    }
+                    return false;
+                });
+                $.validator.unobtrusive.adapters.addSingleVal("selector", "minlength");
+            } (jQuery));
+
+        </script>
     </head>
     <body>
         <header>
@@ -28,8 +45,8 @@
                     </section>
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("HtmlFormHelper", "NewProduct", "HtmlFormHelper")</li>
+                            <li>@Html.ActionLink("Selectors", "Index", "Selector")</li>
                             <li>@Html.ActionLink("Caching", "Index", "Cache")</li>
                             <li>@Html.ActionLink("UploadedFile", "Index", "UploadedFile")</li>
                         </ul>
@@ -38,7 +55,6 @@
             </div>
         </header>
         <div id="body">
-            @RenderSection("featured", false)
             <section class="content-wrapper main-content clear-fix">
                 @RenderBody()
             </section>

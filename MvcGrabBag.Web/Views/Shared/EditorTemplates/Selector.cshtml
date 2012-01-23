@@ -1,30 +1,75 @@
 ﻿@using System.Collections
 @using MvcGrabBag.Web.Selectors
 
-@model object
 @{
     var supportsMany = typeof (IEnumerable).IsAssignableFrom(ViewData.ModelMetadata.ModelType);
     var selectorModel = (Selector)ViewData.ModelMetadata.AdditionalValues["SelectorModelMetadata"];
     var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
     var validationClass = ViewData.ModelState.IsValidField(fieldName) ? "" : "input-validation-error";
 
+    
+    // Loop through the items and make sure they are Selected if the value has been posted
     if(Model != null)
     {
         foreach (var item in selectorModel.Items)
         {
             if (supportsMany)
             {
-                var modelStateValue = Html.GetModelStateValue<string[]>(fieldName) ?? ((IEnumerable)Model).OfType<object>().Select(m => m.ToString());
+                var modelStateValue = GetModelStateValue<string[]>(Html, fieldName) ?? ((IEnumerable)Model).OfType<object>().Select(m => m.ToString());
                 item.Selected = modelStateValue.Contains(item.Value);
             }
             else
             {
-                var modelStateValue = Html.GetModelStateValue<string>(fieldName);
+                var modelStateValue = GetModelStateValue<string>(Html, fieldName);
                 item.Selected = modelStateValue.Equals(item.Value, StringComparison.OrdinalIgnoreCase);
             }
         }
     }
 }
+
+
+@functions
+{
+    public MvcHtmlString BuildInput(string fieldName, SelectListItem item, string inputType)
+    {
+        var id = ViewData.TemplateInfo.GetFullHtmlFieldId(item.Value);
+
+        var wrapper = new TagBuilder("div");
+        wrapper.AddCssClass("selector-item");
+        
+        var input = new TagBuilder("input");
+        input.MergeAttribute("type", inputType);
+        input.MergeAttribute("name", fieldName);
+        input.MergeAttribute("value", item.Value);
+        input.MergeAttribute("id", id);
+        input.MergeAttributes(Html.GetUnobtrusiveValidationAttributes(fieldName, ViewData.ModelMetadata));
+        
+        if(item.Selected)
+            input.MergeAttribute("checked", "checked");
+
+        wrapper.InnerHtml += input.ToString(TagRenderMode.SelfClosing);
+        
+        
+        var label = new TagBuilder("label");
+        label.MergeAttribute("for", id);
+        label.SetInnerText(item.Text);
+        wrapper.InnerHtml += label;
+        
+        return new MvcHtmlString(wrapper.ToString());
+    }
+
+    /// <summary>
+    /// Get the raw value from model state
+    /// </summary>
+    public static T GetModelStateValue<T>(HtmlHelper helper, string key)
+    {
+        ModelState modelState;
+        if (helper.ViewData.ModelState.TryGetValue(key, out modelState) && modelState.Value != null)
+            return (T)modelState.Value.ConvertTo(typeof(T), null);
+        return default(T);
+    }
+}
+
 
 @if (ViewData.ModelMetadata.IsReadOnly)
 {
@@ -50,13 +95,7 @@ else
             <div class="@validationClass">
                 @foreach (var item in selectorModel.Items)
                 {
-                    var id = ViewData.TemplateInfo.GetFullHtmlFieldId(item.Value);
-                    string checkedAttribute = item.Selected ? "checked=\"checked\"" : "";
-
-                    <div class="selector-item">
-                        <input type="checkbox" name="@fieldName" value="@item.Value" id="@id" @Html.Raw(checkedAttribute) />
-                        <label for="@id">@item.Text</label>
-                    </div>
+                    @BuildInput(fieldName, item, "checkbox")
                 }
             </div>
         }
@@ -70,23 +109,12 @@ else
         <div class="@validationClass">
             @if (selectorModel.OptionLabel != null)
             {
-                string id = ViewData.TemplateInfo.GetFullHtmlFieldId("NA");
-                string checkedAttribute = Model == null ? "checked=\"checked\"" : "";
-            
-                <div class="selector-item">
-                    <input type="radio" name="@fieldName" value="" id="@id" @Html.Raw(checkedAttribute) />
-                    <label for="@id">@selectorModel.OptionLabel</label>
-                </div>
+                @BuildInput(fieldName, new SelectListItem { Text = selectorModel.OptionLabel, Value = "" }, "radio")
             }
 
             @foreach (var item in selectorModel.Items)
             {
-                var id = ViewData.TemplateInfo.GetFullHtmlFieldId(item.Value);
-                string checkedAttribute = item.Selected ? "checked=\"checked\"" : "";
-                <div class="selector-item">
-                    <input type="radio" name="@fieldName" value="@item.Value" id="@id" @Html.Raw(checkedAttribute) />
-                    <label for="@id">@item.Text</label>
-                </div>
+                @BuildInput(fieldName, item, "radio")
             }
         </div>
     }
