@@ -37,7 +37,7 @@ namespace MvcGrabBag.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            ModelValidatorProviders.Providers.Add(new UploadedFileModelValidatorProvider());
+            //ModelValidatorProviders.Providers.Add(new UploadedFileModelValidatorProvider());
 
             var customMetadataProvider = new CustomMetadataProvider();
             ModelMetadataProviders.Current = customMetadataProvider;

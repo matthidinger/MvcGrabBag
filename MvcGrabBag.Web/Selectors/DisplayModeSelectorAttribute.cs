@@ -4,11 +4,11 @@ using MvcGrabBag.Web.Models;
 
 namespace MvcGrabBag.Web.Selectors
 {
-    public class ProductDisplayModeSelectorAttribute : SelectorAttribute
+    public class DisplayModeSelectorAttribute : SelectorAttribute
     {
         public override IEnumerable<SelectListItem> GetItems()
         {
-            return Selector.GetItemsFromEnum<ProductDisplayMode>();
+            return Selector.GetItemsFromEnum<DisplayMode>();
         }
     }
 }

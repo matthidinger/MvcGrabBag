@@ -1,6 +1,6 @@
 namespace MvcGrabBag.Web.Models
 {
-    public enum ProductDisplayMode
+    public enum DisplayMode
     {
         HomePage,
         SearchResults,

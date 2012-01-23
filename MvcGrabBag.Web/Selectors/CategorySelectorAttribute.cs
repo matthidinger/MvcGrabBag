@@ -14,7 +14,9 @@ namespace MvcGrabBag.Web.Selectors
 
         public override IEnumerable<SelectListItem> GetItems()
         {
+            // You could of course get these values from a database, similar to:
             //var dataContext = DependencyResolver.Current.GetService<IDataContext>();
+
             var categories = new List<Category>
                                  {
                                      new Category {Id = 1, Name = "Beverages"},

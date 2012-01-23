@@ -1,0 +1,50 @@
+﻿@model MvcGrabBag.Web.Models.DisplayModeOptions
+
+@{
+    ViewBag.Title = "Selectors";
+}
+
+<h2>Selectors</h2>
+
+<h3>The SelectorAttribute enables rich model binding so a user can choose from 1 or more options.</h3>
+<h3>It supports 5 modes:</h3>
+
+
+<ol>
+  <li><strong>Single</strong> selection from a <strong>Drop Down</strong> </li>
+  <li><strong>Single</strong> selection from <strong>Radio Buttons</strong> </li>
+  <li><strong>Multiple</strong> selection from <strong>Check Boxes</strong> </li>
+  <li><strong>Multiple</strong> selection from a <strong>List Box</strong> </li>
+  <li><strong>Read-only</strong> mode combines multiple values into a comma-delimited string </li>
+</ol>
+
+
+
+<form action="" method="post">
+    <div class="two-column">
+    
+        <div class="field-group">
+            <h4>Single Selection</h4>
+            @Html.FullFieldEditor(m => m.RadioButtons)
+            @Html.FullFieldEditor(m => m.DropDown)
+            @Html.FullFieldEditor(m => m.CategoryId)
+        </div>
+        
+        <div class="field-group">
+            <h4>Multiple Selection</h4>
+            @Html.FullFieldEditor(m => m.CheckBoxes)
+            @Html.FullFieldEditor(m => m.ListBox)
+        </div>
+        <div class="clear-fix"></div>
+    
+
+        <h4>Read-only</h4>
+        @Html.EditorFor(m => m.ReadOnly)
+    </div>
+
+    <br/>
+    
+    <div class="clear-fix"></div>
+   
+    <input type="submit" value="Save"/>
+</form>
