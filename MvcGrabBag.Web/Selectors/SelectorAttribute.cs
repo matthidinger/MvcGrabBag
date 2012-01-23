@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace MvcGrabBag.Web.Selectors
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public abstract class SelectorAttribute : ValidationAttribute, IClientValidatable, IMetadataAware
+    public abstract class SelectorAttribute : Attribute, IMetadataAware
     {
         protected SelectorAttribute()
         {
@@ -45,29 +44,5 @@ namespace MvcGrabBag.Web.Selectors
             metadata.TemplateHint = "Selector";
             metadata.AdditionalValues["SelectorModelMetadata"] = selectorModel;
         }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            // Custom server side validation not necessary, but must inherit ValidationAttribute for IClientValidatable
-            return null;
-        }
-
-
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-        {
-            // Trying to enable client-side validation support but NOT WORKING yet. 
-            // Feel free to remove this method and IClientValidatable
-            if(metadata.IsRequired)
-            {
-                var clientValidationRule = new ModelClientValidationRule
-                                               {
-                                                   ErrorMessage = FormatErrorMessage(metadata.GetDisplayName()),
-                                                   ValidationType = "selector"
-                                               };
-
-                yield return clientValidationRule;
-            }
-        }
-
     }
 }
