@@ -1,7 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Data.Entity;
+using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Practices.Unity;
+using MvcGrabBag.Web.EntityFramework;
 using MvcGrabBag.Web.FileUpload;
 using MvcGrabBag.Web.Metadata;
+using MvcGrabBag.Web.Models;
 
 namespace MvcGrabBag.Web
 {
@@ -41,6 +45,12 @@ namespace MvcGrabBag.Web
 
             var customMetadataProvider = new CustomMetadataProvider();
             ModelMetadataProviders.Current = customMetadataProvider;
+
+
+            var container = new UnityContainer();
+            container.RegisterType<IDataContext, ECommerceDb>();
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            Database.SetInitializer(new ECommerceDbInitializer());
         }
     }
 }

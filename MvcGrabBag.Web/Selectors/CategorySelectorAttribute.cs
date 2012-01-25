@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
-using MvcGrabBag.Web.Models;
+using MvcGrabBag.Web.EntityFramework;
 
 namespace MvcGrabBag.Web.Selectors
 {
@@ -23,7 +23,8 @@ namespace MvcGrabBag.Web.Selectors
                                      new Category {Id = 2, Name = "Tools"},
                                      new Category {Id = 3, Name = "Soup"},
                                  };
-            return Selector.GetItems(categories, m => m.Id, m => m.Name);
+
+            return categories.ToSelectList(m => m.Id, m => m.Name);
         }
     }
 }
