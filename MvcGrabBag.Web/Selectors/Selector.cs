@@ -29,22 +29,25 @@ namespace MvcGrabBag.Web.Selectors
                        Selected = enumValue.Equals(selectedValue)
                    };
         }
+    }
 
-        public static IEnumerable<SelectListItem> GetItems(IEnumerable data)
+    public static class SelectorHelper
+    {
+        public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable data)
         {
             return new SelectList(data);
         }
 
-        public static IEnumerable<SelectListItem> GetItems(IEnumerable data, string dataValueField, string dataTextField)
+        public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable data, string dataValueField, string dataTextField)
         {
             return new SelectList(data, dataValueField, dataTextField);
         }
 
-        public static IEnumerable<SelectListItem> GetItems<T>(IEnumerable<T> data, Expression<Func<T, object>> dataValueFieldSelector, Expression<Func<T, string>> dataTextFieldSelector)
+        public static IEnumerable<SelectListItem> ToSelectList<T>(this IEnumerable<T> data, Expression<Func<T, object>> dataValueFieldSelector, Expression<Func<T, string>> dataTextFieldSelector)
         {
             var dataValueField = dataValueFieldSelector.ToPropertyInfo().Name;
             var dataTextField = dataTextFieldSelector.ToPropertyInfo().Name;
-            return GetItems(data, dataValueField, dataTextField);
+            return ToSelectList(data, dataValueField, dataTextField);
         }
     }
 }
