@@ -9,6 +9,15 @@ using System.Linq.Expressions;
 
 namespace MvcGrabBag.Web.EntityFramework
 {
+    public static class DbSetHelper
+    {
+        public static IQueryable<TEntity> Unfiltered<TEntity>(this IDbSet<TEntity> set) where TEntity : class
+        {
+            var filteredDbSet = set as FilteredDbSet<TEntity>;
+            return filteredDbSet != null ? filteredDbSet.Unfiltered() : set;
+        }
+    }
+
     public class FilteredDbSet<TEntity> : IDbSet<TEntity>, IOrderedQueryable<TEntity>, IListSource
             where TEntity : class
     {
@@ -37,6 +46,11 @@ namespace MvcGrabBag.Web.EntityFramework
             _filteredSet = set.Where(filter);
             MatchesFilter = filter.Compile();
             _initializeEntity = initializeEntity;
+        }
+
+        public IQueryable<TEntity> Unfiltered()
+        {
+            return _set;
         }
 
         public Func<TEntity, bool> MatchesFilter { get; private set; }
