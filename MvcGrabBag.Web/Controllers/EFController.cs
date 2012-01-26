@@ -17,7 +17,9 @@ namespace MvcGrabBag.Web.Controllers
         {
             // _db.Categories will only return categories where IsDeleted == false
             var categories = _db.Categories;
-            return Content(string.Format("Found {0} active categories", categories.Count()));
+            var unfiltered = _db.Categories.Unfiltered();
+            
+            return Content(string.Format("Found {0} active categories. Found {1} total.", categories.Count(), unfiltered.Count()));
         }
     }
 }
