@@ -19,6 +19,7 @@ namespace MvcGrabBag.Web.EntityFramework
         public IDbSet<Category> Categories { get; set; }
         public IDbSet<Product> Products { get; set; }
 
+
         IDatabase IDataContext.Database
         {
             get { return _database; }

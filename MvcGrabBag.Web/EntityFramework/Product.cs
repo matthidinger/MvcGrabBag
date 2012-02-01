@@ -1,3 +1,5 @@
+using System;
+
 namespace MvcGrabBag.Web.EntityFramework
 {
     public class Product
@@ -7,5 +9,7 @@ namespace MvcGrabBag.Web.EntityFramework
         public virtual Category Category { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
+
+        public DateTime? DateCreated { get; set; }
     }
 }
