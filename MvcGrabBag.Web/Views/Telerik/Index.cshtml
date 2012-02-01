@@ -1,0 +1,18 @@
+﻿@using MvcGrabBag.Web.Controllers
+@model System.Collections.IEnumerable
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>title</h2>
+
+@(Html.Telerik()
+ .Grid<ProductDashboardModel>()
+ .EnableCustomBinding(true)
+ .BindTo(Model)
+ .Pageable(pager => pager.Total(ViewBag.Total))
+ .Sortable()
+ .Filterable()
+ .Name("products")
+ )
