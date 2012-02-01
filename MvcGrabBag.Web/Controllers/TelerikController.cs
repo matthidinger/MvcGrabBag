@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Web.Mvc;
 using MvcGrabBag.Web.EntityFramework;
 using MvcGrabBag.Web.Helpers;
@@ -18,13 +16,11 @@ namespace MvcGrabBag.Web.Controllers
             _db = db;
         }
 
-        [GridAction(EnableCustomBinding = true)]
+        [GridAction(GridName = "Products", EnableCustomBinding = true)]
         public ActionResult Index(GridCommand command)
         {
             var query = _db.Products;
             int rowCount;
-
-
 
             var grid = query.OrderBy(m => m.Id)
                 .ForGrid(serverModel =>
