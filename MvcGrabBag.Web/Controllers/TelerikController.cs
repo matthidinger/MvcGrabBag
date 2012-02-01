@@ -24,7 +24,9 @@ namespace MvcGrabBag.Web.Controllers
             var query = _db.Products;
             int rowCount;
 
-
+            var grid2 = query.OrderBy(m => m.Id)
+                .ForGrid(new DashboardModel(), command, out rowCount);
+            
 
             var grid = query.OrderBy(m => m.Id)
                 .ForGrid(serverModel =>
@@ -61,6 +63,65 @@ namespace MvcGrabBag.Web.Controllers
         public int DaysOld { get; set; }
     }
 
+    public class GridProperty<TEntity, TProp> : IGridProperty
+    {
+        public GridPropertyValue<TValue, TProp> ServerValue<TValue>(Expression<Func<TEntity, TValue>> selector)
+        {
+            return new GridPropertyValue<TValue, TProp>();
+        }
+    }
+
+    public interface IGridProperty
+    {
+    }
+
+    public class GridPropertyValue<TValue, TExpected>
+    {
+        public void Returns(Func<TValue, TExpected> selector)
+        {
+
+        }
+    }
+
+    public class GridModel<TEntity, TModel> : IGridMap
+    {
+        private readonly List<IGridProperty> _properties = new List<IGridProperty>();
+
+        public GridProperty<TEntity, TProp> Property<TProp>(Expression<Func<TModel, TProp>> selector)
+        {
+            var prop = new GridProperty<TEntity, TProp>();
+            _properties.Add(prop);
+            return prop;
+        }
+    }
+
+    public interface IGridMap
+    {
+
+    }
+
+    public class DashboardModel : GridModel<Product, ProductDashboardModel>
+    {
+        public DashboardModel()
+        {
+            ServerQuery(m => new
+                                 {
+                                     m.Id,
+                                     m.DateCreated.GetValueOrDefault()
+                                 });
+
+            ClientModel()
+
+            Property(m => m.Id).ServerValue(m => m.Id);
+
+            Property(m => m.DaysOld)
+                .ServerValue(m => m.DateCreated.GetValueOrDefault())
+                .Returns(m => DateTime.Now.Subtract(m).Days);
+
+
+        }
+
+    }
 
     public class ClaimsDashboardGridPropertyMap : IGridPropertyMap
     {

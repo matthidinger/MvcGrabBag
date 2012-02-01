@@ -13,6 +13,38 @@ namespace MvcGrabBag.Web.Helpers
 {
     public static class GridQueryExtensions
     {
+        public static IEnumerable ForGrid<T1, T2>(this IQueryable<T1> query, GridModel<T1, T2> map, GridCommand command, out int totalRows)
+        {
+            // apply filtering
+            query = query.ApplyFiltering(command.FilterDescriptors, propertyMap);
+            totalRows = query.Count();
+
+            // apply ordering
+            query = query.ApplySorting(command.GroupDescriptors, command.SortDescriptors, propertyMap);
+
+
+            // project to serverSelector
+            var serverQuery = query.Select();
+
+
+            // apply paging to servermodel
+            serverQuery = serverQuery.ApplyPaging(command.Page, command.PageSize);
+
+            // asenumerable
+            var clientQuery = serverQuery.AsEnumerable();
+
+            // select servermodel to clientmodel
+            var clientModel = clientQuery.Select(clientSelector.Compile());
+
+            if (command.GroupDescriptors.Any())
+            {
+                return clientModel.AsQueryable().ApplyGrouping(command.GroupDescriptors);
+            }
+
+            return clientModel;
+        }
+
+
         /// <summary>
         /// Prepare a LINQ Query for Telerik Grid binding. Will handle paging, sorting, SQL-side querying, and auto-projecting the remaining columns to enable client-side code as well
         /// </summary>
